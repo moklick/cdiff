@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Color Diff Stats</title>
+        <style>body{font-family:sans-serif;}</style>
+      
+</head>
+<body>
+<ul id="db"></ul>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script>        
+                var dirs = ['a','b','c','d'] 
+                var $db = $('#db');
+	        var url = 'http://cdiff.moritzklack.com/py/measurement.py';
+	        $.ajax({
+	        	url: url,
+	        	type: 'POST',
+	        	data : {
+	        		action : 'getall'
+	        	},
+	        	success: function(data) {
+	        		for (var i = 0; i < 25; i++){
+                                   var li = '<li>ID: ' + i + '<ul>';
+                                   for (var d =0; d < 4; d++){
+                                       var dir = dirs[d];
+                                       li += '<li>' + dir + ': ' + data[i].direction[dir] + '</li>';   
+                                   }
+                                   li += '</ul></li>';
+	        		   $db.append(li);	
+	        		}
+	        	}
+	        });
+</script>
+
+</body>
+</html>
