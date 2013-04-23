@@ -128,18 +128,7 @@
  mouseX = e.pageX;
         setC2();
      }).click(function (e) {
-                if (direction == 0) {
-                    diff = color1.b - nb;
-                }
-                else if (direction == 1) {
-                    diff = nr - color1.r;
-                }
-                else if (direction == 2) {
-                    diff = nb - color1.b;
-                }
-                else if (direction == 3) {
-                    diff = color1.r - nr;
-                }
+                diff= ~~((256-(mouseX - offsetL)) * (s))
                 console.log(colorID + '#' + direction + '#' + diff);
                 pushData(colorID, direction, diff);
                 init();
