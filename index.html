@@ -72,7 +72,7 @@
         var m = 1 / 10 * 255; //margin
         for (var y = 0; y < 5; y++) {
             for (var x = 0; x < 5; x++) {
-                colors.push(new Color(~~(y * s + m), 128, ~~(x * s + m)));
+                colors.push(new Color(~~(x * s + m), 128, ~~(y * s + m)));
             }
         }
     }
@@ -99,30 +99,35 @@
     }
 
     function randomize(arr) {
-        var r = Math.floor(Math.random() * arr.length);
-        return arr[r];
+        return arr[~~(Math.random()*arr.length)];
     }
 
-    var s = 51 / 255, nb, nr, diff;
-
-    $('#color2').mousemove(function (e) {
+    var s = 51 / 255, nb, nr, diff, mouseX;
+    function setC2(){
         if (direction == 0) {
-            nb = Math.floor(color2.b + ((e.pageX - offsetL) * s));
+            nb = Math.floor(color2.b + ((mouseX - offsetL) * s));
             c2.style.backgroundColor = 'rgb(' + color2.r + ',' + color2.g + ',' + nb + ')';
         }
         else if (direction == 1) {
-            nr = Math.floor(color2.r + ((e.pageX - offsetL) * (-s)));
+            nr = Math.floor(color2.r + ((mouseX - offsetL) * (-s)));
             c2.style.backgroundColor = 'rgb(' + nr + ',' + color2.g + ',' + color2.b + ')';
         }
         else if (direction == 2) {
-            nb = Math.floor(color2.b + ((e.pageX - offsetL) * (-s)));
+            nb = Math.floor(color2.b + ((mouseX - offsetL) * (-s)));
             c2.style.backgroundColor = 'rgb(' + color2.r + ',' + color2.g + ',' + nb + ')';
         }
         else if (direction == 3) {
-            nr = Math.floor(color2.r + ((e.pageX - offsetL) * (s)));
+            nr = Math.floor(color2.r + ((mouseX - offsetL) * (s)));
             c2.style.backgroundColor = 'rgb(' + nr + ',' + color2.g + ',' + color2.b + ')';
         }
-    }).click(function (e) {
+
+
+    }
+
+    $('#color2').mousemove(function (e) {
+ mouseX = e.pageX;
+        setC2();
+     }).click(function (e) {
                 if (direction == 0) {
                     diff = color1.b - nb;
                 }
@@ -138,6 +143,7 @@
                 console.log(colorID + '#' + direction + '#' + diff);
                 pushData(colorID, direction, diff);
                 init();
+                setC2();
             });
 
     function pushData(colorID, direction, value) {
