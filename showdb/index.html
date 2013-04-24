@@ -101,9 +101,11 @@
                     drawBoundary(data);
 
                     for (var i = 0; i < 25; i++){
+               
                                    var li = '<li id=\"color_' + i + '\">ID: ' + i + '<ul>';
                                    for (var d =0; d < 4; d++){
                                        var dir = dirs[d];
+                                       
                                        li += '<li id=\"color_' + i + '_dir_' + dir + '>' + dir + ': ' + data[i].direction[dir] + '</li>';   
                                    }
                                    li += '</ul></li>';
