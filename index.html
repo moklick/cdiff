@@ -1,152 +1,16 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Color Differences Experiment</title>
+    <title>Color Diff</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-
-<style type="text/css">
-    body {
-        background-color: black;
-    }
-
-    #wrapper {
-        width: 600px;
-        height: 256px;
-        margin: auto;
-        margin-top: 50px;
-    }
-
-    #color1 {
-        float: left;
-        height: 256px;
-        width: 256px;
-        background-color: #00FF00;
-    }
-
-    #color2 {
-        float: left;
-        margin-left: 20px;
-        height: 256px;
-        width: 256px;
-        background-color: #00FF50;
-    }
-
-
-</style>
-<div id="wrapper">
-    <div id="color1">
-    </div>
-    <div id="color2">
-    </div>
+<div id ="colors" class="invisible">
+<div id="col1"></div>
+<div id="refcol"></div>
+<div id="col2"></div>
 </div>
-<script>
-    var colors = [], colorID, direction, color1, color2;
-
-    window.onload = function () {
-        fillColors();
-        init();
-    }
-
-    var c1 = document.getElementById('color1');
-    var c2 = document.getElementById('color2');
-    var offsetL;
-
-    var Color = function (r, g, b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-
-        this.getHex = function () {
-            return '#' + this.decToStr(this.r) + this.decToStr(this.g) + this.decToStr(this.b);
-        }
-        this.decToStr = function (c) {
-            return ("00" + c.toString(16)).substr(-2);
-        }
-    }
-
-    function fillColors() {
-        var s = 1 / 5 * 255; //step
-        var m = 1 / 10 * 255; //margin
-        for (var y = 0; y < 5; y++) {
-            for (var x = 0; x < 5; x++) {
-                colors.push(new Color(~~(x * s + m), 128, ~~(y * s + m)));
-            }
-        }
-    }
-
-    function init() {
-        offsetL = $(c2).offset().left;
-        var newColor
-        while (colorID == (newColor = ~~(Math.random() * 25)));
-        colorID = newColor;
-        color1 = colors[colorID];
-        var values = [];
-        if (colorID > 4) values.push(0);
-        if ((colorID % 5) < 4) values.push(1);
-        if (colorID < 20) values.push(2);
-        if ((colorID % 5) > 0) values.push(3);
-
-        direction = randomize(values);
-        color2 = colors[colorID + [-5, 1, 5, -1][direction]];
-
-        c1.style.backgroundColor = color1.getHex();
-        c2.style.backgroundColor = color2.getHex();
-        console.log(c1.style.backgroundColor + ' ### ' + c2.style.backgroundColor);
-
-    }
-
-    function randomize(arr) {
-        return arr[~~(Math.random()*arr.length)];
-    }
-
-    var s = 51 / 255, nb, nr, diff, mouseX;
-    function setC2(){
-        if (direction == 0) {
-            nb = Math.floor(color2.b + ((mouseX - offsetL) * s));
-            c2.style.backgroundColor = 'rgb(' + color2.r + ',' + color2.g + ',' + nb + ')';
-        }
-        else if (direction == 1) {
-            nr = Math.floor(color2.r + ((mouseX - offsetL) * (-s)));
-            c2.style.backgroundColor = 'rgb(' + nr + ',' + color2.g + ',' + color2.b + ')';
-        }
-        else if (direction == 2) {
-            nb = Math.floor(color2.b + ((mouseX - offsetL) * (-s)));
-            c2.style.backgroundColor = 'rgb(' + color2.r + ',' + color2.g + ',' + nb + ')';
-        }
-        else if (direction == 3) {
-            nr = Math.floor(color2.r + ((mouseX - offsetL) * (s)));
-            c2.style.backgroundColor = 'rgb(' + nr + ',' + color2.g + ',' + color2.b + ')';
-        }
-
-
-    }
-
-    $('#color2').mousemove(function (e) {
- mouseX = e.pageX;
-        setC2();
-     }).click(function (e) {
-                diff= ~~((256-(mouseX - offsetL)) * (s))
-                console.log(colorID + '#' + direction + '#' + diff);
-                pushData(colorID, direction, diff);
-                init();
-                setC2();
-            });
-
-    function pushData(colorID, direction, value) {
-        var url = 'http://cdiff.moritzklack.com/py/measurement.py';
-        var dir = ['a', 'b', 'c', 'd'][direction];
-        $.ajax({
-            url: url,
-            dataType: 'json',
-            data: {action: 'save', colorID: colorID, direction: dir, value: value},
-            success: function (data) {
-                console.log(data);
-            }
-        });
-    }
-</script>
 </body>
+<script src="js/colordiff.js"></script>
 </html>
